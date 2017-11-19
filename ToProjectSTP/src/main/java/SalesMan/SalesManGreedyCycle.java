@@ -12,7 +12,7 @@ import java.util.List;
 
 public class SalesManGreedyCycle extends SalesMan {
 
-    protected String methodName = "Greedy Cycle";
+    protected String methodName = "GreedyCycle";
 
     public SalesManGreedyCycle(List<Node> nodes){
         super(nodes);
@@ -35,7 +35,7 @@ public class SalesManGreedyCycle extends SalesMan {
         notVisitedNodes.remove(startNode);
 
         for(int step = 0; step<nodes.size()-1; step++){
-            Node nextNode = findBestNextNode(null);
+            Node nextNode = findBestNextNode(null, notVisitedNodes);
             if(nextNode == null)
                 break;
             notVisitedNodes.remove(nextNode);
@@ -44,32 +44,38 @@ public class SalesManGreedyCycle extends SalesMan {
 
         preparePath();
         writeToFile(profit, methodName);
+        if(profit>bestProfit){
+            bestProfit = profit;
+            bestPath = path;
+        }
     }
 
-    protected Node findBestNextNode(Node actualNode, List<Node> notVisitedNodes){
-        return super.findBestNextNode(actualNode, notVisitedNodes);
-    }
 
     @Override
-    public Node findBestNextNode(Node actualNode) {
-        Node bestNode = null;
-        Node from = null;
-        double bestProfit = 0;
+    public Node findBestNextNode(Node actualNode, List<Node> notVisitedNodes) {
+        if(actualNode == null) {
+            Node bestNode = null;
+            Node from = null;
+            double bestProfit = 0;
 
-        for(Node node : visitedNodes) {
-            Node findNode = super.findBestNextNode(node);
-            if(findNode != null) {
-                double profit = getCost(node.getIndex(), findNode.getIndex()) + findNode.getProfit();
-                if (profit  >= bestProfit) {
-                    from = node;
-                    bestProfit = profit;
-                    bestNode = findNode;
+            for (Node node : visitedNodes) {
+                Node findNode = super.findBestNextNode(node, notVisitedNodes);
+                if (findNode != null) {
+                    double profit = getCost(node.getIndex(), findNode.getIndex()) + findNode.getProfit();
+                    if (profit >= bestProfit) {
+                        from = node;
+                        bestProfit = profit;
+                        bestNode = findNode;
+                    }
                 }
             }
+            if (bestNode != null)
+                changeCycle(from, bestNode);
+            return bestNode;
         }
-        if(bestNode != null)
-            changeCycle(from, bestNode);
-        return bestNode;
+        else{
+            return super.findBestNextNode(actualNode, notVisitedNodes);
+        }
     }
 
     protected void changeCycle(Node from, Node to){

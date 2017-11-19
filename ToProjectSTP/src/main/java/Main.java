@@ -56,9 +56,12 @@ public class Main {
     }
 
     private static void findPaths(List<SalesMan> salesMen){
-        for(SalesMan salesMan : salesMen)
-            for(Node node : salesMan.getNodes())
+        for(SalesMan salesMan : salesMen) {
+            for (Node node : salesMan.getNodes()) {
                 salesMan.findPath(node);
+            }
+            salesMan.writeBestResult();
+        }
     }
 
 }

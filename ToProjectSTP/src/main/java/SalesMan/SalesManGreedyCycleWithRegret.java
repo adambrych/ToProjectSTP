@@ -10,7 +10,7 @@ public class SalesManGreedyCycleWithRegret extends SalesManGreedyCycle{
 
     public SalesManGreedyCycleWithRegret(List<Node> nodes){
         super(nodes);
-        super.methodName = "Greedy Cycle with Regret";
+        super.methodName = "GreedyCycleWithRegret";
     }
 
     @Override
@@ -20,7 +20,7 @@ public class SalesManGreedyCycleWithRegret extends SalesManGreedyCycle{
     }
 
     @Override
-    public Node findBestNextNode(Node actualNode) {
+    public Node findBestNextNode(Node actualNode, List<Node> notVisitedNodes) {
         Node bestNode = null;
         Node from = null;
         double bestRegret = 0;

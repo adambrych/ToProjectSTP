@@ -7,8 +7,7 @@ import java.util.List;
 
 public class SalesManNearestNeighbor extends SalesMan {
 
-    private static final String methodName = "Nearest Neighbor";
-
+    private static final String methodName = "NearestNeighbor";
     public SalesManNearestNeighbor(List<Node> nodes){
         super(nodes);
     }
@@ -28,7 +27,7 @@ public class SalesManNearestNeighbor extends SalesMan {
         notVisitedNodes.remove(startNode);
 
         for(int step = 0; step<nodes.size()-1; step++){
-            Node nextNode = findBestNextNode(actualNode);
+            Node nextNode = findBestNextNode(actualNode, notVisitedNodes);
             if(nextNode == null)
                 break;
             path.add(nextNode);
@@ -38,11 +37,15 @@ public class SalesManNearestNeighbor extends SalesMan {
         path.add(startNode);
         profit += getCost(actualNode.getIndex(), startNode.getIndex()) + startNode.getProfit();
         writeToFile(profit, methodName);
+        if(profit>bestProfit){
+            bestProfit = profit;
+            bestPath = path;
+        }
     }
 
     @Override
-    public Node findBestNextNode(Node actualNode) {
-        Node bestNode = super.findBestNextNode(actualNode);
+    public Node findBestNextNode(Node actualNode, List<Node> notVisitedNodes) {
+        Node bestNode = super.findBestNextNode(actualNode, notVisitedNodes);
         if(bestNode != null) {
             Double bestProfit = getCost(actualNode.getIndex(), bestNode.getIndex()) + bestNode.getProfit();
             if (bestProfit > 0)

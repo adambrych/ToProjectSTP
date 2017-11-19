@@ -23,6 +23,8 @@ public class SalesMan implements ISalesMan {
     protected double profit = 0;
     List<Node> visitedNodes;
     List<Node> notVisitedNodes;
+    protected double bestProfit = 0;
+    List<Node> bestPath = new ArrayList<Node>();;
 
     public SalesMan(List<Node> nodes){
         this.nodes = nodes;
@@ -57,22 +59,7 @@ public class SalesMan implements ISalesMan {
     }
 
     @Override
-    public Node findBestNextNode(Node actualNode) {
-        double bestProfit = 0;
-        Node bestNode = null;
-        for (Node node : notVisitedNodes) {
-            double profit = getCost(actualNode.getIndex(), node.getIndex());
-            profit += node.profit;
-            if (profit >= bestProfit) {
-                bestProfit = profit;
-                bestNode = node;
-            }
-        }
-
-        return bestNode;
-    }
-
-    protected Node findBestNextNode(Node actualNode, List<Node> notVisitedNodes){
+    public Node findBestNextNode(Node actualNode, List<Node> notVisitedNodes) {
         double bestProfit = 0;
         Node bestNode = null;
         for (Node node : notVisitedNodes) {
@@ -109,6 +96,29 @@ public class SalesMan implements ISalesMan {
             line.append(Integer.toString(node.getIndex()));
             line.append(' ');
         }
+        return line.toString();
+    }
+
+    public void writeBestResult(){
+        try {
+            Path file = Paths.get(fileNameToWrite);
+            for(Node node : bestPath) {
+                String line = preparePointToWrite(node);
+                List<String> lines = Arrays.asList(line);
+                Files.write(file, lines, Charset.forName("UTF-8"), StandardOpenOption.APPEND);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private String preparePointToWrite(Node node){
+        StringBuilder line = new StringBuilder();
+        line.append(node.getIndex());
+        line.append(' ');
+        line.append((int)node.getX());
+        line.append(' ');
+        line.append((int)node.getY());
         return line.toString();
     }
 }
