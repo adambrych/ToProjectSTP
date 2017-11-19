@@ -21,6 +21,8 @@ public class SalesMan implements ISalesMan {
     protected double[][] distances;
     protected List<Node> path = new ArrayList<Node>();
     protected double profit = 0;
+    List<Node> visitedNodes;
+    List<Node> notVisitedNodes;
 
     public SalesMan(List<Node> nodes){
         this.nodes = nodes;
@@ -55,7 +57,22 @@ public class SalesMan implements ISalesMan {
     }
 
     @Override
-    public Node findBestNextNode(Node actualNode, List<Node> notVisitedNodes) {
+    public Node findBestNextNode(Node actualNode) {
+        double bestProfit = 0;
+        Node bestNode = null;
+        for (Node node : notVisitedNodes) {
+            double profit = getCost(actualNode.getIndex(), node.getIndex());
+            profit += node.profit;
+            if (profit >= bestProfit) {
+                bestProfit = profit;
+                bestNode = node;
+            }
+        }
+
+        return bestNode;
+    }
+
+    protected Node findBestNextNode(Node actualNode, List<Node> notVisitedNodes){
         double bestProfit = 0;
         Node bestNode = null;
         for (Node node : notVisitedNodes) {
@@ -85,12 +102,13 @@ public class SalesMan implements ISalesMan {
         StringBuilder line = new StringBuilder();
         line.append(methodName);
         line.append(' ');
+        line.append("profit ");
+        line.append(profit);
+        line.append(' ');
         for(Node node : path){
             line.append(Integer.toString(node.getIndex()));
             line.append(' ');
         }
-        line.append("profit ");
-        line.append(profit);
         return line.toString();
     }
 }

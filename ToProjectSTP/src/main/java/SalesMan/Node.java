@@ -25,5 +25,7 @@ public class Node {
         this.x = node.x;
         this.y = node.y;
         this.profit = node.profit;
+        this.prev = node.prev;
+        this.next = node.next;
     }
 }

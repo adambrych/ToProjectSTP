@@ -1,20 +1,25 @@
+/*
+Trasa jest budowana tak, że zawsze tworzy cykl
+Hamiltona. W każdej iteracji dodawany jest jeden
+najkrótszy łuk z pozostałych dostępnych. Czyli w naszym przypadku dodawane miasto z największym zyskiem.
+ */
+
 package SalesMan;
+
+import lombok.Data;
 
 import java.util.ArrayList;
 import java.util.List;
-
 public class SalesManGreedyCycle extends SalesMan {
 
-    private static final String methodName = "Greedy Cycle";
-
-    List<Node> visitedNodes;
+    protected String methodName = "Greedy Cycle";
 
     public SalesManGreedyCycle(List<Node> nodes){
         super(nodes);
 
     }
 
-    private void init(Node startNode){
+    protected void init(Node startNode){
         clearPrevNext();
         visitedNodes = new ArrayList<Node>();
         visitedNodes.add(startNode);
@@ -26,11 +31,11 @@ public class SalesManGreedyCycle extends SalesMan {
     @Override
     public void findPath(Node startNode) {
         init(startNode);
-        List<Node> notVisitedNodes = new ArrayList(nodes);
+        notVisitedNodes = new ArrayList(nodes);
         notVisitedNodes.remove(startNode);
 
         for(int step = 0; step<nodes.size()-1; step++){
-            Node nextNode = findBestNextNode(null, notVisitedNodes);
+            Node nextNode = findBestNextNode(null);
             if(nextNode == null)
                 break;
             notVisitedNodes.remove(nextNode);
@@ -41,16 +46,20 @@ public class SalesManGreedyCycle extends SalesMan {
         writeToFile(profit, methodName);
     }
 
+    protected Node findBestNextNode(Node actualNode, List<Node> notVisitedNodes){
+        return super.findBestNextNode(actualNode, notVisitedNodes);
+    }
+
     @Override
-    public Node findBestNextNode(Node actualNode, List<Node> notVisitedNodes) {
+    public Node findBestNextNode(Node actualNode) {
         Node bestNode = null;
         Node from = null;
         double bestProfit = 0;
 
         for(Node node : visitedNodes) {
-            Node findNode = super.findBestNextNode(node, notVisitedNodes);
+            Node findNode = super.findBestNextNode(node);
             if(findNode != null) {
-                double profit = getCost(node.getIndex(), node.getIndex()) + findNode.getProfit();
+                double profit = getCost(node.getIndex(), findNode.getIndex()) + findNode.getProfit();
                 if (profit  >= bestProfit) {
                     from = node;
                     bestProfit = profit;
@@ -63,7 +72,7 @@ public class SalesManGreedyCycle extends SalesMan {
         return bestNode;
     }
 
-    private void changeCycle(Node from, Node to){
+    protected void changeCycle(Node from, Node to){
         if(visitedNodes.size() == 1){
             from.setNext(to);
             to.setPrev(from);
@@ -95,12 +104,16 @@ public class SalesManGreedyCycle extends SalesMan {
 
     private void preparePath(){
         Node node = visitedNodes.get(0);
-        do{
-            path.add(node);
-            profit += getCost(node.getIndex(), node.getNext().getIndex()) + node.getNext().getProfit();
-            node = node.getNext();
-        }while(node != visitedNodes.get(0));
-        profit += getCost(visitedNodes.get(0).getPrev().getIndex(), visitedNodes.get(0).getIndex()) + visitedNodes.get(0).getProfit();
+        if(visitedNodes.size() > 1) {
+            do {
+                path.add(node);
+                profit += getCost(node.getIndex(), node.getNext().getIndex()) + node.getNext().getProfit();
+                node = node.getNext();
+            } while (node != visitedNodes.get(0));
+            profit += getCost(visitedNodes.get(0).getPrev().getIndex(), visitedNodes.get(0).getIndex()) + visitedNodes.get(0).getProfit();
+        }
+        else
+            profit +=node.getProfit();
         path.add(visitedNodes.get(0));
     }
 

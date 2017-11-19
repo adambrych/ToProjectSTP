@@ -26,8 +26,7 @@ public class Main {
         try {
             File file = new File(SalesMan.fileNameToWrite);
             if(file.exists()) {
-                PrintWriter writer = null;
-                writer = new PrintWriter(file);
+                PrintWriter writer = new PrintWriter(file);
                 writer.print("");
                 writer.close();
             }
@@ -51,6 +50,8 @@ public class Main {
         salesMen.add(nn);
         SalesManGreedyCycle gc = new SalesManGreedyCycle(nodes);
         salesMen.add(gc);
+        SalesManGreedyCycleWithRegret gcr = new SalesManGreedyCycleWithRegret(nodes);
+        salesMen.add(gcr);
         return salesMen;
     }
 
