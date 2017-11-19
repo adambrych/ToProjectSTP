@@ -6,10 +6,10 @@ najkrótszy łuk z pozostałych dostępnych. Czyli w naszym przypadku dodawane m
 
 package SalesMan;
 
-import lombok.Data;
 
 import java.util.ArrayList;
 import java.util.List;
+
 public class SalesManGreedyCycle extends SalesMan {
 
     protected String methodName = "Greedy Cycle";
