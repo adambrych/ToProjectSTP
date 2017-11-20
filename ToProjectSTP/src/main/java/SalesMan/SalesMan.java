@@ -63,8 +63,7 @@ public class SalesMan implements ISalesMan {
         double bestProfit = 0;
         Node bestNode = null;
         for (Node node : notVisitedNodes) {
-            double profit = getCost(actualNode.getIndex(), node.getIndex());
-            profit += node.profit;
+            double profit = getProfit(actualNode, node);
             if (profit >= bestProfit) {
                 bestProfit = profit;
                 bestNode = node;
@@ -72,6 +71,13 @@ public class SalesMan implements ISalesMan {
         }
 
         return bestNode;
+    }
+
+    @Override
+    public double getProfit(Node from, Node to) {
+        double profit = getCost(from.getIndex(), to.getIndex());
+        profit += to.profit;
+        return profit;
     }
 
     protected void writeToFile(double profit, String methodName){

@@ -35,7 +35,7 @@ public class SalesManNearestNeighbor extends SalesMan {
             actualNode = nextNode;
         }
         path.add(startNode);
-        profit += getCost(actualNode.getIndex(), startNode.getIndex()) + startNode.getProfit();
+        profit += getProfit(actualNode, startNode);
         writeToFile(profit, methodName);
         if(profit>bestProfit){
             bestProfit = profit;
@@ -47,10 +47,15 @@ public class SalesManNearestNeighbor extends SalesMan {
     public Node findBestNextNode(Node actualNode, List<Node> notVisitedNodes) {
         Node bestNode = super.findBestNextNode(actualNode, notVisitedNodes);
         if(bestNode != null) {
-            Double bestProfit = getCost(actualNode.getIndex(), bestNode.getIndex()) + bestNode.getProfit();
+            Double bestProfit = getProfit(actualNode, bestNode);
             if (bestProfit > 0)
                 profit += bestProfit;
         }
         return bestNode;
+    }
+
+    @Override
+    public double getProfit(Node from, Node to) {
+        return super.getProfit(from, to);
     }
 }

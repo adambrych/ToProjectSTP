@@ -50,8 +50,8 @@ public class Main {
         salesMen.add(nn);
         SalesManGreedyCycle gc = new SalesManGreedyCycle(nodes);
         salesMen.add(gc);
-        SalesManGreedyCycleWithRegret gcr = new SalesManGreedyCycleWithRegret(nodes);
-        salesMen.add(gcr);
+        //SalesManGreedyCycleWithRegret gcr = new SalesManGreedyCycleWithRegret(nodes);
+        //salesMen.add(gcr);
         return salesMen;
     }
 
