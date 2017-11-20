@@ -36,7 +36,7 @@ public class SalesManNearestNeighbor extends SalesMan {
         }
         if (path.size() > 1) {
             path.add(startNode);
-            profit += getCost(actualNode.getIndex(), startNode.getIndex());
+            profit += getProfit(actualNode, startNode);
         } else {
             profit += startNode.getProfit();
         }
