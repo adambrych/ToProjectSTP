@@ -1,12 +1,16 @@
 package SalesMan;
 
 
+import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
+
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 public class SalesManGreedyCycleWithRegret extends SalesManGreedyCycle{
 
-    private static final int regretSteps = 5;
+    private double actualBestRegret = - Double.MAX_VALUE;
 
     public SalesManGreedyCycleWithRegret(List<Node> nodes){
         super(nodes);
@@ -15,56 +19,68 @@ public class SalesManGreedyCycleWithRegret extends SalesManGreedyCycle{
 
     @Override
     public void findPath(Node startNode){
-        super.init(startNode);
+        super.init(startNode); // TODO: delete
         super.findPath(startNode);
     }
 
     @Override
-    public Node findBestNextNode(Node actualNode, List<Node> notVisitedNodes) {
+    public Node findBestNextNode(Node actualNode, List<Node> visitedNodes) {
+        ArrayList<Double> regrets = new ArrayList<Double>();
         Node bestNode = null;
-        Node from = null;
-        double bestRegret = 0;
-        List<Node> visited = new ArrayList<Node>(visitedNodes);
-        for(Node node : visited) {
-            Regret regret = countRegret(node);
-            if(regret != null && regret.getRegret() > bestRegret){
-                from = getNode(node);
-                bestRegret = regret.getRegret();
-                bestNode = getNode(regret.getNodes().get(0));
+        double bestProfit = 0;
+        for (Node node : visitedNodes) {
+            double profit = super.getProfit(node, actualNode);
+            regrets.add(profit);
+            if (profit > bestProfit) {
+                bestProfit = profit;
+                bestNode = node;
             }
         }
-        if(bestNode != null)
-            super.changeCycle(from, bestNode);
+        Collections.sort(regrets);
+        Collections.reverse(regrets);
+        if (regrets.size() > 1 && regrets.get(0) > 0) {
+            double regret = regrets.get(0) - regrets.get(1);
+            if (regret > actualBestRegret) {
+                actualBestRegret = regret;
+                return bestNode;
+            }
+            return null;
+        }
+        return null;
+    }
+
+    @Override
+    public Node findBestNextNode(List<Node> notVisitedNodes) {
+        Node bestNodeFrom = null;
+        Node bestNode = null;
+        if (visitedNodes.size() >= 3) {
+            for (Node node : notVisitedNodes) {
+                Node tempBestNode = findBestNextNode(node, visitedNodes);
+                if (tempBestNode != null) {
+                    bestNodeFrom = tempBestNode;
+                    bestNode = node;
+                }
+            }
+        } else {
+            double bestProfit = 0;
+            for (Node node : visitedNodes) {
+                Node findNode = super.findBestNextNode(node, notVisitedNodes);
+                if (findNode != null) {
+                    double profit = getProfit(node, findNode);
+                    if (profit >= bestProfit) {
+                        bestNodeFrom = node;
+                        bestProfit = profit;
+                        bestNode = findNode;
+                    }
+                }
+            }
+        }
+
+        if (bestNode != null)
+            changeCycle(bestNodeFrom, bestNode);
+        actualBestRegret = 0;
         return bestNode;
     }
 
-    private Regret countRegret(Node actualNode){
-        Regret regret = new Regret();
-        List<Node> beforeNotVisited = cloneList(notVisitedNodes);
-        Node prev = actualNode;
-        for(int i =0; i< Math.min(regretSteps, notVisitedNodes.size()); i++) {
-
-        }
-        return regret;
-    }
-
-    private List<Node> cloneList(List<Node> nodes){
-        List<Node> newList = new ArrayList<Node>();
-        for(Node node : nodes)
-            newList.add(new Node(node));
-        return newList;
-    }
-
-    private Node getNode(Node node){
-      for(Node actualNode : notVisitedNodes){
-          if(actualNode.getIndex() == node.getIndex())
-              return actualNode;
-      }
-        for(Node actualNode : visitedNodes){
-            if(actualNode.getIndex() == node.getIndex())
-                return actualNode;
-        }
-      return null;
-    }
 
 }

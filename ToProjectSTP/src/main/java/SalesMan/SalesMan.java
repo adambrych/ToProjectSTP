@@ -24,6 +24,7 @@ public class SalesMan implements ISalesMan {
     List<Node> visitedNodes;
     List<Node> notVisitedNodes;
     protected double bestProfit = 0;
+    private double average = 0;
     List<Node> bestPath = new ArrayList<Node>();;
 
     public SalesMan(List<Node> nodes){
@@ -84,6 +85,7 @@ public class SalesMan implements ISalesMan {
         try {
             Path file = Paths.get(fileNameToWrite);
             String line = prepareLineToWrite(path, profit, methodName);
+            average += profit;
             List<String> lines = Arrays.asList(line);
             Files.write(file, lines, Charset.forName("UTF-8"), StandardOpenOption.APPEND);
         } catch (IOException e) {
@@ -109,6 +111,7 @@ public class SalesMan implements ISalesMan {
         try {
             Path file = Paths.get(fileNameToWrite);
             Files.write(file, Arrays.asList("BEST: " + Double.toString(bestProfit)), Charset.forName("UTF-8"), StandardOpenOption.APPEND);
+            Files.write(file, Arrays.asList("AVG: " + Double.toString(average/100)), Charset.forName("UTF-8"), StandardOpenOption.APPEND);
             for(Node node : bestPath) {
                 String line = preparePointToWrite(node);
                 List<String> lines = Arrays.asList(line);
