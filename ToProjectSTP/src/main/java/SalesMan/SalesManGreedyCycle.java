@@ -117,7 +117,6 @@ public class SalesManGreedyCycle extends SalesMan {
                 profit += getCost(node.getIndex(), node.getNext().getIndex()) + node.getNext().getProfit();
                 node = node.getNext();
             } while (node != visitedNodes.get(0));
-            profit += getCost(visitedNodes.get(0).getPrev().getIndex(), visitedNodes.get(0).getIndex());
         }
         else
             profit +=node.getProfit();
