@@ -6,8 +6,6 @@ import java.util.List;
 
 public class SalesManGreedyCycleWithRegret extends SalesManGreedyCycle{
 
-    private static final int regretSteps = 5;
-
     public SalesManGreedyCycleWithRegret(List<Node> nodes){
         super(nodes);
         super.methodName = "GreedyCycleWithRegret";
@@ -22,49 +20,40 @@ public class SalesManGreedyCycleWithRegret extends SalesManGreedyCycle{
     @Override
     public Node findBestNextNode(Node actualNode, List<Node> notVisitedNodes) {
         Node bestNode = null;
-        Node from = null;
-        double bestRegret = 0;
-        List<Node> visited = new ArrayList<Node>(visitedNodes);
-        for(Node node : visited) {
-            Regret regret = countRegret(node);
-            if(regret != null && regret.getRegret() > bestRegret){
-                from = getNode(node);
-                bestRegret = regret.getRegret();
-                bestNode = getNode(regret.getNodes().get(0));
+        Regret bestRegret = findBestRegret();
+        if(bestRegret != null && bestRegret.getBestFrom() != null && getProfit(bestRegret.getBestFrom(), bestRegret.getTo()) >= 0) {
+            bestNode = bestRegret.getTo();
+            super.changeCycle(bestRegret.getBestFrom(), bestRegret.getTo());
             }
-        }
-        if(bestNode != null)
-            super.changeCycle(from, bestNode);
         return bestNode;
     }
 
-    private Regret countRegret(Node actualNode){
-        Regret regret = new Regret();
-        List<Node> beforeNotVisited = cloneList(notVisitedNodes);
-        Node prev = actualNode;
-        for(int i =0; i< Math.min(regretSteps, notVisitedNodes.size()); i++) {
-
+    private Regret findBestRegret(){
+        if(visitedNodes.size() > 1) {
+            List<Regret> regrets = new ArrayList<Regret>();
+            for (Node to : notVisitedNodes) {
+                Regret regret = new Regret(to);
+                for (Node from : visitedNodes) {
+                    regret.getRegrets().add(new RegretFrom(from, super.getProfit(from, to)));
+                }
+                regret.countRegret();
+                regrets.add(regret);
+            }
+            double bestRegret = -1000000000;
+            Regret best = null;
+            for (Regret regret : regrets) {
+                if (regret.getRegret() > bestRegret) {
+                    bestRegret = regret.getRegret();
+                    best = regret;
+                }
+            }
+            return best;
         }
-        return regret;
-    }
-
-    private List<Node> cloneList(List<Node> nodes){
-        List<Node> newList = new ArrayList<Node>();
-        for(Node node : nodes)
-            newList.add(new Node(node));
-        return newList;
-    }
-
-    private Node getNode(Node node){
-      for(Node actualNode : notVisitedNodes){
-          if(actualNode.getIndex() == node.getIndex())
-              return actualNode;
-      }
-        for(Node actualNode : visitedNodes){
-            if(actualNode.getIndex() == node.getIndex())
-                return actualNode;
+        else{
+            Regret regret = new Regret(super.findBestNextNode(null, notVisitedNodes));
+            regret.setBestFrom(visitedNodes.get(0));
+            return regret;
         }
-      return null;
     }
 
 }

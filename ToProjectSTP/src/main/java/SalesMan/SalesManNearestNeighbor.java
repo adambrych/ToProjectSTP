@@ -34,12 +34,8 @@ public class SalesManNearestNeighbor extends SalesMan {
             notVisitedNodes.remove(nextNode);
             actualNode = nextNode;
         }
-        if (path.size() > 1) {
-            path.add(startNode);
-            profit += getProfit(actualNode, startNode);
-        } else {
-            profit += startNode.getProfit();
-        }
+        path.add(startNode);
+        countProfit();
         writeToFile(profit, methodName);
         if(profit>bestProfit){
             bestProfit = profit;
@@ -47,14 +43,15 @@ public class SalesManNearestNeighbor extends SalesMan {
         }
     }
 
+    private void countProfit(){
+        for(int i = 0; i< path.size()-1; i++){
+            profit += getProfit(path.get(i), path.get(i+1));
+        }
+    }
+
     @Override
     public Node findBestNextNode(Node actualNode, List<Node> notVisitedNodes) {
         Node bestNode = super.findBestNextNode(actualNode, notVisitedNodes);
-        if(bestNode != null) {
-            Double bestProfit = getProfit(actualNode, bestNode);
-            if (bestProfit > 0)
-                profit += bestProfit;
-        }
         return bestNode;
     }
 

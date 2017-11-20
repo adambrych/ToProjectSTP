@@ -2,19 +2,28 @@ package SalesMan;
 
 import lombok.Data;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Data
 public class Regret {
-    double regret;
-    List<Node> nodes = new ArrayList<Node>();
+    private Node to;
+    private List<RegretFrom> regrets = new ArrayList<RegretFrom>();
+    private Node bestFrom;
 
-    public Regret(){
+    private double regret;
+    public Regret(Node to){
         regret = 0;
+        this.to = to;
     }
 
-    public void addRegret(Double regret){
-        this.regret +=regret;
+    public void countRegret(){
+        regrets.sort(new Comparator<RegretFrom>() {
+            @Override
+            public int compare(RegretFrom o1, RegretFrom o2) {
+                return o1.getProfit().compareTo(o1.getProfit());
+            }
+        });
+        bestFrom = regrets.get(0).getFrom();
+        regret = regrets.get(0).getProfit() - regrets.get(1).getProfit();
     }
 }

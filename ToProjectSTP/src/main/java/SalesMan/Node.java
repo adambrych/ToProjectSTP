@@ -28,4 +28,11 @@ public class Node {
         this.prev = node.prev;
         this.next = node.next;
     }
+
+    @Override
+    public int hashCode() {
+        int result = 1;
+        result = (int) (index * x * y);
+        return result;
+    }
 }
