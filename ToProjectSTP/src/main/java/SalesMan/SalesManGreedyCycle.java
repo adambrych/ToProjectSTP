@@ -86,20 +86,10 @@ public class SalesManGreedyCycle extends SalesMan {
             to.setNext(from);
         }
         else if(visitedNodes.size() == 2){
-            if(from.getPrev()!= null) {
                 from.setNext(to);
-                from.getPrev().setPrev(to);
+                to.setPrev(from);
                 to.setNext(from.getPrev());
-                to.setPrev(from);
-            }
-            else{
-                from.getNext().setNext(from);
-                from.getNext().setPrev(to);
-                to.setPrev(from);
-                to.setNext(from.getNext());
-                from.setPrev(from.getNext());
-                from.setNext(to);
-            }
+                from.getPrev().setPrev(to);
         }
         else{
             Node lastNext = from.getNext();

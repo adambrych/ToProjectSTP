@@ -43,16 +43,7 @@ public class SalesManGreedyCycleWithRegret extends SalesManGreedyCycle{
         List<Node> beforeNotVisited = cloneList(notVisitedNodes);
         Node prev = actualNode;
         for(int i =0; i< Math.min(regretSteps, notVisitedNodes.size()); i++) {
-            Node actual = super.findBestNextNode(prev, beforeNotVisited);
-            if(actual != null){
-                regret.addRegret(getCost(prev.getIndex(), actual.getIndex()) + actual.getProfit());
-                regret.getNodes().add(actual);
-                beforeNotVisited.remove(actual);
-            }
-            else{
-                break;
-            }
-            prev = actual;
+
         }
         return regret;
     }
