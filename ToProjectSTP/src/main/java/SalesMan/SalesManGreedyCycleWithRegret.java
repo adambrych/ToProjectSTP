@@ -21,15 +21,18 @@ public class SalesManGreedyCycleWithRegret extends SalesManGreedyCycle{
     public Node findBestNextNode(Node actualNode, List<Node> notVisitedNodes) {
         Node bestNode = null;
         Regret bestRegret = findBestRegret();
+        if(bestRegret.getTo() == null)
+            return null;
         if(bestRegret != null && bestRegret.getBestFrom() != null && getProfit(bestRegret.getBestFrom(), bestRegret.getTo()) >= 0) {
             bestNode = bestRegret.getTo();
-            super.changeCycle(bestRegret.getBestFrom(), bestRegret.getTo());
+            if(visitedNodes.size() > 2)
+                super.changeCycle(bestRegret.getBestFrom(), bestRegret.getTo());
             }
         return bestNode;
     }
 
     private Regret findBestRegret(){
-        if(visitedNodes.size() > 1) {
+        if(visitedNodes.size() > 2) {
             List<Regret> regrets = new ArrayList<Regret>();
             for (Node to : notVisitedNodes) {
                 Regret regret = new Regret(to);

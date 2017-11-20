@@ -24,6 +24,8 @@ public class Regret {
             }
         });
         bestFrom = regrets.get(0).getFrom();
-        regret = regrets.get(0).getProfit() - regrets.get(1).getProfit();
+        if(regrets.get(0).getProfit() >= 0)
+            regret = regrets.get(0).getProfit() - regrets.get(1).getProfit();
+        else regret = 0;
     }
 }
