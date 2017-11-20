@@ -31,11 +31,11 @@ public class SalesManGreedyCycle extends SalesMan {
     @Override
     public void findPath(Node startNode) {
         init(startNode);
-        notVisitedNodes = new ArrayList(nodes);
+        notVisitedNodes = new ArrayList<Node>(nodes);
         notVisitedNodes.remove(startNode);
 
         for(int step = 0; step<nodes.size()-1; step++){
-            Node nextNode = findBestNextNode(null, notVisitedNodes);
+            Node nextNode = findBestNextNode(notVisitedNodes);
             if(nextNode == null)
                 break;
             notVisitedNodes.remove(nextNode);
@@ -53,29 +53,38 @@ public class SalesManGreedyCycle extends SalesMan {
 
     @Override
     public Node findBestNextNode(Node actualNode, List<Node> notVisitedNodes) {
-        if(actualNode == null) {
-            Node bestNode = null;
-            Node from = null;
-            double bestProfit = 0;
+        double bestProfit = 0;
+        Node bestNode = null;
+        for (Node node : notVisitedNodes) {
+            double profit = getProfit(actualNode, node);
+            if (profit >= bestProfit) {
+                bestProfit = profit;
+                bestNode = node;
+            }
+        }
 
-            for (Node node : visitedNodes) {
-                Node findNode = super.findBestNextNode(node, notVisitedNodes);
-                if (findNode != null) {
-                    double profit =getProfit(node, findNode);
-                    if (profit >= bestProfit) {
-                        from = node;
-                        bestProfit = profit;
-                        bestNode = findNode;
-                    }
+        return bestNode;
+    }
+
+    public Node findBestNextNode(List<Node> notVisitedNodes) {
+        Node bestNode = null;
+        Node from = null;
+        double bestProfit = 0;
+
+        for (Node node : visitedNodes) {
+            Node findNode = findBestNextNode(node, notVisitedNodes);
+            if (findNode != null) {
+                double profit = getProfit(node, findNode);
+                if (profit >= bestProfit) {
+                    from = node;
+                    bestProfit = profit;
+                    bestNode = findNode;
                 }
             }
-            if (bestNode != null)
-                changeCycle(from, bestNode);
-            return bestNode;
         }
-        else{
-            return super.findBestNextNode(actualNode, notVisitedNodes);
-        }
+        if (bestNode != null)
+            changeCycle(from, bestNode);
+        return bestNode;
     }
 
     protected void changeCycle(Node from, Node to){
@@ -86,20 +95,10 @@ public class SalesManGreedyCycle extends SalesMan {
             to.setNext(from);
         }
         else if(visitedNodes.size() == 2){
-            if(from.getPrev()!= null) {
-                from.setNext(to);
-                from.getPrev().setPrev(to);
-                to.setNext(from.getPrev());
-                to.setPrev(from);
-            }
-            else{
-                from.getNext().setNext(from);
-                from.getNext().setPrev(to);
-                to.setPrev(from);
-                to.setNext(from.getNext());
-                from.setPrev(from.getNext());
-                from.setNext(to);
-            }
+            from.setNext(to);
+            from.getPrev().setPrev(to);
+            to.setNext(from.getPrev());
+            to.setPrev(from);
         }
         else{
             Node lastNext = from.getNext();
@@ -118,7 +117,7 @@ public class SalesManGreedyCycle extends SalesMan {
                 profit += getCost(node.getIndex(), node.getNext().getIndex()) + node.getNext().getProfit();
                 node = node.getNext();
             } while (node != visitedNodes.get(0));
-            profit += getCost(visitedNodes.get(0).getPrev().getIndex(), visitedNodes.get(0).getIndex()) + visitedNodes.get(0).getProfit();
+            profit += getCost(visitedNodes.get(0).getPrev().getIndex(), visitedNodes.get(0).getIndex());
         }
         else
             profit +=node.getProfit();
@@ -138,7 +137,7 @@ public class SalesManGreedyCycle extends SalesMan {
             return super.getProfit(from, to);
         }
         else{
-            return getCost(from.getIndex(), to.getIndex()) + getCost(from.getNext().getIndex(), to.getIndex()) - getCost(from.getIndex(), to.getIndex()) + to.getProfit();
+            return getCost(from.getIndex(), to.getIndex()) + getCost(from.getNext().getIndex(), to.getIndex()) - getCost(from.getIndex(), from.getNext().getIndex()) + to.getProfit();
         }
     }
 

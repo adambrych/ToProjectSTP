@@ -108,6 +108,7 @@ public class SalesMan implements ISalesMan {
     public void writeBestResult(){
         try {
             Path file = Paths.get(fileNameToWrite);
+            Files.write(file, Arrays.asList("BEST: " + Double.toString(bestProfit)), Charset.forName("UTF-8"), StandardOpenOption.APPEND);
             for(Node node : bestPath) {
                 String line = preparePointToWrite(node);
                 List<String> lines = Arrays.asList(line);
