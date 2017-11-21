@@ -46,7 +46,7 @@ public class SalesManGreedyCycle extends SalesMan {
 
         preparePath();
         writeToFile(profit, methodName);
-        if(profit>bestProfit){
+        if(profit<bestProfit){
             bestProfit = profit;
             bestPath = path;
         }

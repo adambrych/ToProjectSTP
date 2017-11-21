@@ -25,7 +25,8 @@ public class Regret {
         });
         bestFrom = regrets.get(0).getFrom();
         if(regrets.get(0).getProfit() >= 0)
-            regret = regrets.get(0).getProfit() - regrets.get(1).getProfit();
+            for(int i=1; i<regrets.size(); i++)
+                regret = regrets.get(i).getProfit() - regrets.get(1).getProfit();
         else regret = 0;
     }
 }

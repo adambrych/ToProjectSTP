@@ -23,7 +23,7 @@ public class SalesMan implements ISalesMan {
     protected double profit = 0;
     List<Node> visitedNodes;
     List<Node> notVisitedNodes;
-    protected double bestProfit = 0;
+    protected double bestProfit = 1000000000;
     List<Node> bestPath = new ArrayList<Node>();;
 
     public SalesMan(List<Node> nodes){
@@ -99,8 +99,8 @@ public class SalesMan implements ISalesMan {
         line.append(profit);
         line.append(' ');
         for(Node node : path){
-            line.append(Integer.toString(node.getIndex()));
-            line.append(' ');
+            line.append(Integer.toString(node.getIndex()+1));
+            line.append(", ");
         }
         return line.toString();
     }
@@ -120,11 +120,11 @@ public class SalesMan implements ISalesMan {
 
     private String preparePointToWrite(Node node){
         StringBuilder line = new StringBuilder();
-        line.append(node.getIndex());
+        line.append(node.getIndex()+1);
         line.append(' ');
-        line.append((int)node.getX());
+        line.append((int)node.getX()+1);
         line.append(' ');
-        line.append((int)node.getY());
+        line.append((int)node.getY()+1);
         return line.toString();
     }
 }

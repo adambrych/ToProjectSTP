@@ -37,7 +37,7 @@ public class SalesManNearestNeighbor extends SalesMan {
         path.add(startNode);
         countProfit();
         writeToFile(profit, methodName);
-        if(profit>bestProfit){
+        if(profit<bestProfit){
             bestProfit = profit;
             bestPath = path;
         }
