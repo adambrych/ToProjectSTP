@@ -7,6 +7,8 @@ najkrótszy łuk z pozostałych dostępnych. Czyli w naszym przypadku dodawane m
 package SalesMan;
 
 
+import jdk.nashorn.internal.runtime.regexp.joni.constants.OPCode;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,6 +19,13 @@ public class SalesManGreedyCycle extends SalesMan {
     public SalesManGreedyCycle(List<Node> nodes){
         super(nodes);
 
+    }
+
+    public SalesManGreedyCycle(SalesMan salesMan) {
+        super(salesMan.getNodes());
+        path = salesMan.getPath();
+        visitedNodes = salesMan.getVisitedNodes();
+        notVisitedNodes = salesMan.getNotVisitedNodes();
     }
 
     protected void init(Node startNode){
@@ -85,6 +94,25 @@ public class SalesManGreedyCycle extends SalesMan {
         if (bestNode != null)
             changeCycle(from, bestNode);
         return bestNode;
+    }
+
+    public ExtendingNode findNodeToExtend(List<Node> notVisitedNodes) {
+        Node bestNode = null;
+        Node from = null;
+        double bestProfit = 0;
+
+        for (Node node : visitedNodes) {
+            Node findNode = findBestNextNode(node, notVisitedNodes);
+            if (findNode != null) {
+                double profit = getProfit(node, findNode);
+                if (profit >= bestProfit) {
+                    from = node;
+                    bestProfit = profit;
+                    bestNode = findNode;
+                }
+            }
+        }
+        return new ExtendingNode(from, bestNode, bestProfit, OperationType.ADD);
     }
 
     protected void changeCycle(Node from, Node to){

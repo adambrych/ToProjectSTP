@@ -1,6 +1,7 @@
 package SalesMan;
 
 import lombok.Getter;
+import lombok.Setter;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -13,6 +14,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @Getter
+@Setter
 public class SalesMan implements ISalesMan {
 
     private static final int cost = 5;
