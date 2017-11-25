@@ -123,7 +123,7 @@ public class SalesManGreedyCycle extends SalesMan {
         path.add(visitedNodes.get(0));
     }
 
-    private void clearPrevNext(){
+    protected void clearPrevNext(){
         for(Node node : nodes){
             node.setPrev(null);
             node.setNext(null);

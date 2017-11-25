@@ -44,7 +44,6 @@ public class SalesManGreedyCycleWithRegret extends SalesManGreedyCycle{
                 actualBestRegret = regret;
                 return bestNode;
             }
-            return null;
         }
         return null;
     }
