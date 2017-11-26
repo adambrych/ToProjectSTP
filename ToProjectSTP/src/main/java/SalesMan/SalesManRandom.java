@@ -16,6 +16,8 @@ public class SalesManRandom extends SalesMan {
     }
 
     private void init(Node startNode){
+        visitedNodes = new ArrayList<Node>();
+        visitedNodes.add(startNode);
         path = new ArrayList<Node>();
         path.add(startNode);
         profit = 0;
@@ -32,12 +34,22 @@ public class SalesManRandom extends SalesMan {
             Node nextNode = findBestNextNode(actualNode, notVisitedNodes);
             if(nextNode == null)
                 break;
+            if (step == 0) {
+                startNode.setNext(nextNode);
+                nextNode.setPrev(startNode);
+            } else {
+                actualNode.setNext(nextNode);
+                nextNode.setPrev(actualNode);
+            }
             path.add(nextNode);
             notVisitedNodes.remove(nextNode);
+            visitedNodes.add(nextNode);
             actualNode = nextNode;
         }
         if (path.size() > 1) {
             path.add(startNode);
+            actualNode.setNext(startNode);
+            startNode.setPrev(actualNode);
             profit += getProfit(actualNode, startNode);
         } else {
             profit += startNode.getProfit();
@@ -53,11 +65,12 @@ public class SalesManRandom extends SalesMan {
     public Node findBestNextNode(Node actualNode, List<Node> notVisitedNodes) {
         for (int i = 0; i < notVisitedNodes.size(); ++i) {
             int index = randomGenerator.nextInt(notVisitedNodes.size());
-            System.out.println(actualNode.getIndex() + " " + index);
             Node bestNode = notVisitedNodes.get(index);
             double bestProfit = getProfit(actualNode, bestNode);
             if (bestProfit > 0) {
                 profit += bestProfit;
+                bestNode.setPrev(actualNode);
+                actualNode.setNext(bestNode);
                 return bestNode;
             }
         }

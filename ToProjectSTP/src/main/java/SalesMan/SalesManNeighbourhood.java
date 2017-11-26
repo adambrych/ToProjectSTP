@@ -28,12 +28,16 @@ public class SalesManNeighbourhood {
             actualCost = salesMan.getCost(node.getPrev().getIndex(), node.getIndex())
                     + node.getProfit() + salesMan.getCost(node.getIndex(), node.getNext().getIndex());
             cost = salesMan.getCost(node.getPrev().getIndex(), node.getNext().getIndex());
-            if (cost < actualCost && cost < bestCost) {
+            if (actualCost < 0 && cost < actualCost && cost < bestCost) {
+                System.out.println("TAAAAAK");
                 bestCost = cost;
                 bestNodeToRemove = node;
             }
         }
-        return new ExtendingNode(null, bestNodeToRemove, Math.abs(bestCost), OperationType.REMOVE);
+        if (bestCost != -Double.MAX_VALUE) {
+            bestCost = Math.abs(bestCost);
+        }
+        return new ExtendingNode(null, bestNodeToRemove, bestCost, OperationType.REMOVE);
     }
 
     private ExtendingNode swapEdges() {
@@ -44,14 +48,19 @@ public class SalesManNeighbourhood {
         }
         for (Node firstNode : salesMan.getVisitedNodes()) {
             for (Node thirdNode : salesMan.getVisitedNodes()) {
-                if (thirdNode != firstNode.getNext() || thirdNode != firstNode.getPrev()) {
+                if (thirdNode != firstNode.getNext() && thirdNode != firstNode.getPrev() && thirdNode != firstNode) {
                     Node secondNode = firstNode.getNext();
                     Node fourthNode = thirdNode.getNext();
                     double actualCost = salesMan.getCost(firstNode.getIndex(), secondNode.getIndex())
                             + salesMan.getCost(thirdNode.getIndex(), fourthNode.getIndex());
                     double cost = salesMan.getCost(firstNode.getIndex(), thirdNode.getIndex())
                             + salesMan.getCost(secondNode.getIndex(), fourthNode.getIndex());
+//                    System.out.println(actualCost);
+//                    System.out.println(cost);
+//                    System.out.println(firstNode.getIndex() + " " + thirdNode.getIndex());
+//                    System.out.println("-------------");
                     if (cost < actualCost && cost < bestCost) {
+                        System.out.println("TAL TAL TLA");
                         bestCost = cost;
                         bestNodes[0] = firstNode;
                         bestNodes[1] = thirdNode;
@@ -59,7 +68,10 @@ public class SalesManNeighbourhood {
                 }
             }
         }
-        return new ExtendingNode(bestNodes[0], bestNodes[1], Math.abs(bestCost), OperationType.SWAP);
+        if (bestCost != -Double.MAX_VALUE) {
+            bestCost = Math.abs(bestCost);
+        }
+        return new ExtendingNode(bestNodes[0], bestNodes[1], bestCost, OperationType.SWAP);
     }
 
     public void extendCycle() {
@@ -80,7 +92,9 @@ public class SalesManNeighbourhood {
                 }
             }
             if (bestResult != null) {
-                profitAmount += profit;
+//                System.out.println(salesMan.getNotVisitedNodes().size());
+//                System.out.println(bestResult.getOperationType());
+                profitAmount += bestResult.getProfit();
                 switch (bestResult.getOperationType()) {
                     case ADD:
                         addNodeToCycle(bestResult);
@@ -94,7 +108,8 @@ public class SalesManNeighbourhood {
                 }
             }
         } while (profit > 0);
-        System.out.println(profitAmount);
+        System.out.println("--------");
+//        System.out.println(profitAmount);
     }
 
     private boolean checkProfit(ExtendingNode result, double profit) {
@@ -111,6 +126,7 @@ public class SalesManNeighbourhood {
         last.setPrev(to);
         salesMan.setProfit(salesMan.getProfit() + node.getProfit());
         salesMan.getVisitedNodes().add(to);
+        salesMan.getNotVisitedNodes().remove(to);
     }
 
     private void removeNodeFromCycle(ExtendingNode node) {
