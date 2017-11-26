@@ -28,8 +28,7 @@ public class SalesManNeighbourhood {
             actualCost = salesMan.getCost(node.getPrev().getIndex(), node.getIndex())
                     + node.getProfit() + salesMan.getCost(node.getIndex(), node.getNext().getIndex());
             cost = salesMan.getCost(node.getPrev().getIndex(), node.getNext().getIndex());
-            if (actualCost < 0 && cost < actualCost && cost < bestCost) {
-                System.out.println("TAAAAAK");
+            if (actualCost < 0 && cost > actualCost && cost > bestCost) {
                 bestCost = cost;
                 bestNodeToRemove = node;
             }
@@ -55,12 +54,7 @@ public class SalesManNeighbourhood {
                             + salesMan.getCost(thirdNode.getIndex(), fourthNode.getIndex());
                     double cost = salesMan.getCost(firstNode.getIndex(), thirdNode.getIndex())
                             + salesMan.getCost(secondNode.getIndex(), fourthNode.getIndex());
-//                    System.out.println(actualCost);
-//                    System.out.println(cost);
-//                    System.out.println(firstNode.getIndex() + " " + thirdNode.getIndex());
-//                    System.out.println("-------------");
-                    if (cost < actualCost && cost < bestCost) {
-                        System.out.println("TAL TAL TLA");
+                    if (actualCost < 0 && cost > actualCost && cost > bestCost) {
                         bestCost = cost;
                         bestNodes[0] = firstNode;
                         bestNodes[1] = thirdNode;
@@ -92,8 +86,7 @@ public class SalesManNeighbourhood {
                 }
             }
             if (bestResult != null) {
-//                System.out.println(salesMan.getNotVisitedNodes().size());
-//                System.out.println(bestResult.getOperationType());
+                System.out.println(bestResult.getOperationType());
                 profitAmount += bestResult.getProfit();
                 switch (bestResult.getOperationType()) {
                     case ADD:
@@ -108,7 +101,6 @@ public class SalesManNeighbourhood {
                 }
             }
         } while (profit > 0);
-        System.out.println("--------");
 //        System.out.println(profitAmount);
     }
 
@@ -131,7 +123,10 @@ public class SalesManNeighbourhood {
 
     private void removeNodeFromCycle(ExtendingNode node) {
         Node nodeToRemove = node.getTo();
-        nodeToRemove.getPrev().setNext(nodeToRemove.getNext());
+        Node prevNode = nodeToRemove.getPrev();
+        Node nextNode = nodeToRemove.getNext();
+        prevNode.setNext(nextNode);
+        nextNode.setPrev(prevNode);
         salesMan.setProfit(salesMan.getProfit() + node.getProfit());
         salesMan.getVisitedNodes().remove(nodeToRemove);
         salesMan.getNotVisitedNodes().add(nodeToRemove);
@@ -143,11 +138,15 @@ public class SalesManNeighbourhood {
         Node thirdNode = node.getTo();
         Node fourthNode = thirdNode.getNext();
         firstNode.setNext(thirdNode);
+        Node tempNode = thirdNode.getPrev();
         thirdNode.setPrev(firstNode);
-        Node tempNode = secondNode.getNext();
+        thirdNode.setNext(tempNode);
+        tempNode = secondNode.getNext();
         secondNode.setNext(fourthNode);
+        secondNode.setPrev(tempNode);
         fourthNode.setPrev(secondNode);
         while (tempNode != thirdNode) {
+//            System.out.println(tempNode.getIndex());
             Node temp = tempNode.getNext();
             tempNode.setNext(tempNode.getPrev());
             tempNode.setPrev(temp);

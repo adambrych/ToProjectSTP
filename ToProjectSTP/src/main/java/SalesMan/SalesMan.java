@@ -105,7 +105,10 @@ public class SalesMan implements ISalesMan {
         for(Node node : path){
             line.append(Integer.toString(node.getIndex()));
             line.append(' ');
-            line.append(getCost(node.getIndex(), node.getNext().getIndex()) + ',' + '')
+            line.append(getCost(node.getIndex(), node.getNext().getIndex()));
+            line.append(", ");
+            line.append(node.getNext().getProfit());
+            line.append('\n');
         }
         return line.toString();
     }

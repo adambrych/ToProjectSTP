@@ -48,23 +48,22 @@ public class Main {
         List<SalesMan> salesMen = new ArrayList<SalesMan>();
         SalesManNearestNeighbor nn = new SalesManNearestNeighbor(nodes);
         salesMen.add(nn);
-//        SalesManGreedyCycle gc = new SalesManGreedyCycle(nodes);
-//        salesMen.add(gc);
-//        SalesManGreedyCycleWithRegret gcr = new SalesManGreedyCycleWithRegret(nodes);
-//        salesMen.add(gcr);
-//        SalesManRandom randomSalesMan = new SalesManRandom(nodes);
-//        salesMen.add(randomSalesMan);
+        SalesManGreedyCycle gc = new SalesManGreedyCycle(nodes);
+        salesMen.add(gc);
+        SalesManGreedyCycleWithRegret gcr = new SalesManGreedyCycleWithRegret(nodes);
+        salesMen.add(gcr);
+        SalesManRandom randomSalesMan = new SalesManRandom(nodes);
+        salesMen.add(randomSalesMan);
         return salesMen;
     }
 
     private static void findPaths(List<SalesMan> salesMen){
         for(SalesMan salesMan : salesMen) {
-//            for (Node node : salesMan.getNodes()) {
-                salesMan.findPath(salesMan.getNodes().get(0));
-                System.out.println(salesMan.getClass());
+            for (Node node : salesMan.getNodes()) {
+                salesMan.findPath(node);
                 SalesManNeighbourhood salesManNeighbourhood = new SalesManNeighbourhood(salesMan);
                 salesManNeighbourhood.extendCycle();
-//            }
+            }
             salesMan.writeBestResult();
         }
     }

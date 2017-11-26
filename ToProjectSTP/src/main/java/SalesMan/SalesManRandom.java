@@ -1,6 +1,8 @@
 package SalesMan;
 
 
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -9,6 +11,7 @@ public class SalesManRandom extends SalesMan {
 
     protected String methodName = "Random";
     private Random randomGenerator;
+    private int nodesCount;
 
     public SalesManRandom(List<Node> nodes) {
         super(nodes);
@@ -21,6 +24,10 @@ public class SalesManRandom extends SalesMan {
         path = new ArrayList<Node>();
         path.add(startNode);
         profit = 0;
+        nodesCount = randomGenerator.nextInt(nodes.size());
+        if (nodesCount < 4) {
+            nodesCount = 50;
+        }
     }
 
     @Override
@@ -30,10 +37,9 @@ public class SalesManRandom extends SalesMan {
         Node actualNode = new Node(startNode);
         notVisitedNodes.remove(startNode);
 
-        for(int step = 0; step<nodes.size()-1; step++){
-            Node nextNode = findBestNextNode(actualNode, notVisitedNodes);
-            if(nextNode == null)
-                break;
+        for(int step = 0; step<nodesCount; step++){
+            int index = randomGenerator.nextInt(notVisitedNodes.size());
+            Node nextNode = notVisitedNodes.get(index);
             if (step == 0) {
                 startNode.setNext(nextNode);
                 nextNode.setPrev(startNode);
@@ -46,14 +52,10 @@ public class SalesManRandom extends SalesMan {
             visitedNodes.add(nextNode);
             actualNode = nextNode;
         }
-        if (path.size() > 1) {
-            path.add(startNode);
-            actualNode.setNext(startNode);
-            startNode.setPrev(actualNode);
-            profit += getProfit(actualNode, startNode);
-        } else {
-            profit += startNode.getProfit();
-        }
+        path.add(startNode);
+        actualNode.setNext(startNode);
+        startNode.setPrev(actualNode);
+        profit += getProfit(actualNode, startNode);
         writeToFile(profit, methodName);
         if(profit>bestProfit){
             bestProfit = profit;
@@ -63,18 +65,7 @@ public class SalesManRandom extends SalesMan {
 
     @Override
     public Node findBestNextNode(Node actualNode, List<Node> notVisitedNodes) {
-        for (int i = 0; i < notVisitedNodes.size(); ++i) {
-            int index = randomGenerator.nextInt(notVisitedNodes.size());
-            Node bestNode = notVisitedNodes.get(index);
-            double bestProfit = getProfit(actualNode, bestNode);
-            if (bestProfit > 0) {
-                profit += bestProfit;
-                bestNode.setPrev(actualNode);
-                actualNode.setNext(bestNode);
-                return bestNode;
-            }
-        }
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
