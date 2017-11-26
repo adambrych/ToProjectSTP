@@ -12,6 +12,7 @@ public class SalesManRandom extends SalesMan {
 
     public SalesManRandom(List<Node> nodes) {
         super(nodes);
+        randomGenerator = new Random();
     }
 
     private void init(Node startNode){
@@ -50,12 +51,15 @@ public class SalesManRandom extends SalesMan {
 
     @Override
     public Node findBestNextNode(Node actualNode, List<Node> notVisitedNodes) {
-        int index = randomGenerator.nextInt(notVisitedNodes.size());
-        Node bestNode = notVisitedNodes.get(index);
-        double bestProfit = getProfit(actualNode, bestNode);
-        if (bestProfit > 0) {
-            profit += bestProfit;
-            return bestNode;
+        for (int i = 0; i < notVisitedNodes.size(); ++i) {
+            int index = randomGenerator.nextInt(notVisitedNodes.size());
+            System.out.println(actualNode.getIndex() + " " + index);
+            Node bestNode = notVisitedNodes.get(index);
+            double bestProfit = getProfit(actualNode, bestNode);
+            if (bestProfit > 0) {
+                profit += bestProfit;
+                return bestNode;
+            }
         }
         return null;
     }

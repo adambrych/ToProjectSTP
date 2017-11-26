@@ -3,6 +3,7 @@ import SalesMan.Node;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.SortedMap;
 
 public class FileReaderTxt {
 
@@ -33,13 +34,28 @@ public class FileReaderTxt {
     private BufferedReader getBufferedReader(String filename){
         try {
             ClassLoader classLoader = getClass().getClassLoader();
-            File file = new File(classLoader.getResource(filename).getFile());
+            InputStream is = classLoader.getResourceAsStream(filename);
+            File file = new File(filename+"temp");
+            FileOutputStream out = new FileOutputStream(file);
+            copyStream (is, out);
+            out.close();
+//            File file = new File(classLoader.getResource(filename).getFile());
             FileReader fr = new FileReader(file);
             return new BufferedReader(fr);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         return null;
+    }
+
+    private static void copyStream(InputStream in, OutputStream out) throws IOException {
+        byte[] buffer = new byte[1024];
+        int read;
+        while ((read = in.read(buffer)) != -1) {
+            out.write(buffer, 0, read);
+        }
     }
 
     private void prepareNode(String lineA, String lineB, List<Node> nodes){
