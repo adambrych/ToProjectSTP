@@ -137,7 +137,7 @@ public class SalesManGreedyCycle extends SalesMan {
         }
     }
 
-    private void preparePath(){
+    public void preparePath(){
         Node node = visitedNodes.get(0);
         if(visitedNodes.size() > 1) {
             do {

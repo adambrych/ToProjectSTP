@@ -11,12 +11,13 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 @Getter
 @Setter
 public class SalesMan implements ISalesMan {
-
+    protected String methodName = "";
     private static final int cost = 5;
     public static final String fileNameToWrite = "result.txt";
     protected List<Node> nodes;
@@ -27,7 +28,8 @@ public class SalesMan implements ISalesMan {
     List<Node> notVisitedNodes;
     protected double bestProfit = 0;
     private double average = 0;
-    List<Node> bestPath = new ArrayList<Node>();;
+    List<Node> bestPath = new ArrayList<Node>();
+    private double actualProfit = 0;
 
     public SalesMan(List<Node> nodes){
         this.nodes = nodes;
@@ -52,7 +54,7 @@ public class SalesMan implements ISalesMan {
         }
     }
 
-    protected double getCost(int from, int to){
+    public double getCost(int from, int to){
         return -1 * distances[from][to] * cost;
     }
 
@@ -105,12 +107,22 @@ public class SalesMan implements ISalesMan {
         for(Node node : path){
             line.append(Integer.toString(node.getIndex()));
             line.append(' ');
-            line.append(getCost(node.getIndex(), node.getNext().getIndex()));
-            line.append(", ");
-            line.append(node.getNext().getProfit());
-            line.append('\n');
         }
         return line.toString();
+    }
+
+    public void preparePath(){
+        Node node = visitedNodes.get(0);
+        if(visitedNodes.size() > 1) {
+            do {
+                path.add(node);
+                profit += getCost(node.getIndex(), node.getNext().getIndex()) + node.getNext().getProfit();
+                node = node.getNext();
+            } while (node != visitedNodes.get(0));
+        }
+        else
+            profit +=node.getProfit();
+        path.add(visitedNodes.get(0));
     }
 
     public void writeBestResult(){
@@ -122,6 +134,24 @@ public class SalesMan implements ISalesMan {
                 String line = preparePointToWrite(node);
                 List<String> lines = Arrays.asList(line);
                 Files.write(file, lines, Charset.forName("UTF-8"), StandardOpenOption.APPEND);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void writeExtensions(HashMap<String, List<Node>> extensions, HashMap<String, Double> results) {
+        try {
+            Path file = Paths.get(fileNameToWrite);
+            for (String method : extensions.keySet()) {
+                List<Node> salesMan = extensions.get(method);
+                System.out.println(results.get(method));
+                Files.write(file, Arrays.asList("EXTEND: " + method + " " + results.get(method)), Charset.forName("UTF-8"), StandardOpenOption.APPEND);
+                for(Node node : salesMan) {
+                    String line = preparePointToWrite(node);
+                    List<String> lines = Arrays.asList(line);
+                    Files.write(file, lines, Charset.forName("UTF-8"), StandardOpenOption.APPEND);
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();

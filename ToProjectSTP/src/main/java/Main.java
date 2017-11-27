@@ -7,7 +7,9 @@ import java.io.PrintWriter;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 public class Main {
 
@@ -58,14 +60,41 @@ public class Main {
     }
 
     private static void findPaths(List<SalesMan> salesMen){
+        HashMap<String, List<Node>> bestSalesMan = new HashMap<String, List<Node>>();
+        HashMap<String, Double> bestResults = new HashMap<String, Double>();
+        HashMap<String, Long> times = new HashMap<String, Long>();
+        long sum = 0;
         for(SalesMan salesMan : salesMen) {
             for (Node node : salesMan.getNodes()) {
                 salesMan.findPath(node);
                 SalesManNeighbourhood salesManNeighbourhood = new SalesManNeighbourhood(salesMan);
-                salesManNeighbourhood.extendCycle();
+                long startTime = System.currentTimeMillis();
+                SalesMan salesManExtend = salesManNeighbourhood.extendCycle();
+                long stopTime = System.currentTimeMillis();
+                long elapsedTime = stopTime - startTime;
+                sum += elapsedTime;
+//                System.out.println(elapsedTime);
+                if (times.get(salesManExtend.getClass().toString()) == null) {
+                    times.put(salesManExtend.getClass().toString(), elapsedTime);
+                } else {
+                    times.put(salesManExtend.getClass().toString(), times.get(salesManExtend.getClass().toString()) + elapsedTime);
+                }
+                if (bestResults.get(salesManExtend.getClass().toString()) == null) {
+                    bestSalesMan.put(salesManExtend.getClass().toString(), salesManExtend.getVisitedNodes());
+                    bestResults.put(salesManExtend.getClass().toString(), salesManExtend.getActualProfit());
+                }
+                    double bestResult = bestResults.get(salesManExtend.getClass().toString());
+                    if (salesManExtend.getActualProfit() > bestResult) {
+                        bestSalesMan.put(salesManExtend.getClass().toString(), salesManExtend.getVisitedNodes());
+                        bestResults.put(salesManExtend.getClass().toString(), salesManExtend.getActualProfit());
+                    }
+
             }
             salesMan.writeBestResult();
         }
+        salesMen.get(0).writeExtensions(bestSalesMan, bestResults);
+        System.out.println(times);
+        System.out.printf("sum" + sum);
     }
 
 }

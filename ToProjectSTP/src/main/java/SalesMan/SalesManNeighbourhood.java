@@ -1,6 +1,7 @@
 package SalesMan;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class SalesManNeighbourhood {
 
@@ -29,7 +30,7 @@ public class SalesManNeighbourhood {
                     + node.getProfit() + salesMan.getCost(node.getIndex(), node.getNext().getIndex());
             cost = salesMan.getCost(node.getPrev().getIndex(), node.getNext().getIndex());
             if (actualCost < 0 && cost > actualCost && cost > bestCost) {
-                bestCost = cost;
+                bestCost = Math.abs(actualCost) - Math.abs(bestCost);
                 bestNodeToRemove = node;
             }
         }
@@ -55,7 +56,7 @@ public class SalesManNeighbourhood {
                     double cost = salesMan.getCost(firstNode.getIndex(), thirdNode.getIndex())
                             + salesMan.getCost(secondNode.getIndex(), fourthNode.getIndex());
                     if (actualCost < 0 && cost > actualCost && cost > bestCost) {
-                        bestCost = cost;
+                        bestCost = Math.abs(actualCost) - Math.abs(cost);
                         bestNodes[0] = firstNode;
                         bestNodes[1] = thirdNode;
                     }
@@ -68,9 +69,10 @@ public class SalesManNeighbourhood {
         return new ExtendingNode(bestNodes[0], bestNodes[1], bestCost, OperationType.SWAP);
     }
 
-    public void extendCycle() {
+    public SalesMan extendCycle() {
         double profit;
         double profitAmount = 0;
+        double actualCycleProfit =  salesMan.getProfit();
         ExtendingNode bestResult;
         do {
             profit = 0;
@@ -86,7 +88,7 @@ public class SalesManNeighbourhood {
                 }
             }
             if (bestResult != null) {
-                System.out.println(bestResult.getOperationType());
+                //System.out.println(bestResult.getOperationType() + " " + bestResult.getProfit());
                 profitAmount += bestResult.getProfit();
                 switch (bestResult.getOperationType()) {
                     case ADD:
@@ -101,7 +103,12 @@ public class SalesManNeighbourhood {
                 }
             }
         } while (profit > 0);
-//        System.out.println(profitAmount);
+
+        salesMan.setActualProfit(profitAmount + actualCycleProfit);
+        salesMan.preparePath();
+        salesMan.writeToFile(profitAmount + actualCycleProfit, salesMan.getClass().toString());
+        //System.out.println(salesMan.getClass().toString() + " " +  profitAmount + " " + Double.toString(profitAmount + actualCycleProfit));
+        return salesMan;
     }
 
     private boolean checkProfit(ExtendingNode result, double profit) {
@@ -146,7 +153,6 @@ public class SalesManNeighbourhood {
         secondNode.setPrev(tempNode);
         fourthNode.setPrev(secondNode);
         while (tempNode != thirdNode) {
-//            System.out.println(tempNode.getIndex());
             Node temp = tempNode.getNext();
             tempNode.setNext(tempNode.getPrev());
             tempNode.setPrev(temp);
