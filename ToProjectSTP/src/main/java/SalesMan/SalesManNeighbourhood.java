@@ -11,6 +11,7 @@ public class SalesManNeighbourhood {
     public SalesManNeighbourhood(SalesMan salesMan) {
         this.salesMan = salesMan;
         salesManGreedyCycle = new SalesManGreedyCycle(salesMan);
+        this.salesMan.getTabu().setTabuList(new ArrayList<Node>());
     }
 
     private ExtendingNode addNewNode() {
@@ -24,6 +25,8 @@ public class SalesManNeighbourhood {
             return new ExtendingNode(null, null, 0, OperationType.REMOVE);
         }
         for (Node node : salesMan.getVisitedNodes()) {
+            if(salesMan.getTabu().isNodeInList(node))
+                continue;
             double cost = 0;
             double actualCost = 0;
             actualCost = salesMan.getCost(node.getPrev().getIndex(), node.getIndex())
@@ -52,6 +55,8 @@ public class SalesManNeighbourhood {
                 if (thirdNode != firstNode.getNext() && thirdNode != firstNode.getPrev() && thirdNode != firstNode) {
                     Node secondNode = firstNode.getNext();
                     Node fourthNode = thirdNode.getNext();
+                    if(salesMan.getTabu().isNodeInList(firstNode) || salesMan.getTabu().isNodeInList(secondNode) || salesMan.getTabu().isNodeInList(thirdNode) || salesMan.getTabu().isNodeInList(fourthNode))
+                        continue;
                     double actualCost = salesMan.getCost(firstNode.getIndex(), secondNode.getIndex())
                             + salesMan.getCost(thirdNode.getIndex(), fourthNode.getIndex());
                     double cost = salesMan.getCost(firstNode.getIndex(), thirdNode.getIndex())
@@ -102,6 +107,9 @@ public class SalesManNeighbourhood {
                         swapEdgesInCycle(bestResult);
                         break;
                 }
+                if(salesMan.getTabu().size == 0)
+                    salesMan.getTabu().addToList(bestResult.getFrom());
+                salesMan.getTabu().addToList(bestResult.getTo());
             }
         } while (profit > 0);
         salesMan.setActualProfit(profitAmount + actualCycleProfit);
