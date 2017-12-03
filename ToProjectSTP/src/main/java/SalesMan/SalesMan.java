@@ -19,6 +19,7 @@ import java.util.List;
 public class SalesMan implements ISalesMan {
     protected String methodName = "";
     private static final int cost = 5;
+    private static final int tabuSize = 5;
     public static final String fileNameToWrite = "result.txt";
     protected List<Node> nodes;
     protected double[][] distances;
@@ -30,11 +31,13 @@ public class SalesMan implements ISalesMan {
     private double average = 0;
     List<Node> bestPath = new ArrayList<Node>();
     private double actualProfit = 0;
+    protected Tabu tabu;
 
     public SalesMan(List<Node> nodes){
         this.nodes = nodes;
         this.distances = new double[nodes.size()][nodes.size()];
         findDistancesBetweenNodes();
+        tabu = new Tabu(tabuSize);
     }
 
     private void findDistancesBetweenNodes(){

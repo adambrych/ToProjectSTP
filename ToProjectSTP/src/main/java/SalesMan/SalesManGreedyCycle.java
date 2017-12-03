@@ -65,6 +65,8 @@ public class SalesManGreedyCycle extends SalesMan {
         double bestProfit = 0;
         Node bestNode = null;
         for (Node node : notVisitedNodes) {
+            if(tabu.isNodeInList(node))
+                continue;
             double profit = getProfit(actualNode, node);
             if (profit >= bestProfit) {
                 bestProfit = profit;
