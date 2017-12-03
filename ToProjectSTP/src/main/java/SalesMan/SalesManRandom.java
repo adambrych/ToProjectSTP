@@ -48,6 +48,7 @@ public class SalesManRandom extends SalesMan {
                 nextNode.setPrev(actualNode);
             }
             path.add(nextNode);
+            profit += getProfit(actualNode, nextNode);
             notVisitedNodes.remove(nextNode);
             visitedNodes.add(nextNode);
             actualNode = nextNode;

@@ -18,7 +18,7 @@ import java.util.List;
 @Setter
 public class SalesMan implements ISalesMan {
     protected String methodName = "";
-    private static final int cost = 5;
+    private static final int cost = 6;
     public static final String fileNameToWrite = "result.txt";
     protected List<Node> nodes;
     protected double[][] distances;
@@ -113,6 +113,7 @@ public class SalesMan implements ISalesMan {
 
     public void preparePath(){
         Node node = visitedNodes.get(0);
+        path = new ArrayList<Node>();
         if(visitedNodes.size() > 1) {
             do {
                 path.add(node);

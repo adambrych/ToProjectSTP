@@ -29,8 +29,9 @@ public class SalesManNeighbourhood {
             actualCost = salesMan.getCost(node.getPrev().getIndex(), node.getIndex())
                     + node.getProfit() + salesMan.getCost(node.getIndex(), node.getNext().getIndex());
             cost = salesMan.getCost(node.getPrev().getIndex(), node.getNext().getIndex());
-            if (actualCost < 0 && cost > actualCost && cost > bestCost) {
-                bestCost = Math.abs(actualCost) - Math.abs(bestCost);
+            double profit = Math.abs(actualCost) - Math.abs(cost);
+            if (actualCost < 0 && cost > actualCost && profit > bestCost) {
+                bestCost = profit;
                 bestNodeToRemove = node;
             }
         }
@@ -55,8 +56,9 @@ public class SalesManNeighbourhood {
                             + salesMan.getCost(thirdNode.getIndex(), fourthNode.getIndex());
                     double cost = salesMan.getCost(firstNode.getIndex(), thirdNode.getIndex())
                             + salesMan.getCost(secondNode.getIndex(), fourthNode.getIndex());
-                    if (actualCost < 0 && cost > actualCost && cost > bestCost) {
-                        bestCost = Math.abs(actualCost) - Math.abs(cost);
+                    double profit = Math.abs(actualCost) - Math.abs(cost);
+                    if (actualCost < 0 && cost > actualCost && profit > bestCost) {
+                        bestCost = profit;
                         bestNodes[0] = firstNode;
                         bestNodes[1] = thirdNode;
                     }
@@ -88,7 +90,6 @@ public class SalesManNeighbourhood {
                 }
             }
             if (bestResult != null) {
-                //System.out.println(bestResult.getOperationType() + " " + bestResult.getProfit());
                 profitAmount += bestResult.getProfit();
                 switch (bestResult.getOperationType()) {
                     case ADD:
@@ -103,7 +104,6 @@ public class SalesManNeighbourhood {
                 }
             }
         } while (profit > 0);
-
         salesMan.setActualProfit(profitAmount + actualCycleProfit);
         salesMan.preparePath();
         salesMan.writeToFile(profitAmount + actualCycleProfit, salesMan.getClass().toString());
