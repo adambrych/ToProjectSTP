@@ -15,6 +15,7 @@ public class Main {
 
     private static final String fileNameA = "kroA100.txt";
     private static final String fileNameB = "kroB100.txt";
+    private static final int tabuSize = 0;
 
     public static void main(String [] args) {
         clearResultFile();
@@ -66,7 +67,6 @@ public class Main {
         long sum = 0;
         for(SalesMan salesMan : salesMen) {
             for (Node node : salesMan.getNodes()) {
-                for(int tabuSize = 0; tabuSize <=5; tabuSize++) {
                     salesMan.getTabu().setTabuList(new ArrayList<ExtendingNode>());
                     salesMan.getTabu().setSize(tabuSize);
                     salesMan.findPath(node);
@@ -91,7 +91,6 @@ public class Main {
                         bestSalesMan.put(salesManExtend.getClass().toString(), salesManExtend.getVisitedNodes());
                         bestResults.put(salesManExtend.getClass().toString(), salesManExtend.getActualProfit());
                     }
-                }
 
             }
             salesMan.writeBestResult();
