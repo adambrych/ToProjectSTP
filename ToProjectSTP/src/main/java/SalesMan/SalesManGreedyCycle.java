@@ -102,7 +102,7 @@ public class SalesManGreedyCycle extends SalesMan {
         this.tabu = tabu;
         Node bestNode = null;
         Node from = null;
-        double bestProfit = 0;
+        double bestProfit = -1000000000;
 
         for (Node node : visitedNodes) {
             Node findNode = findBestNextNode(node, notVisitedNodes);

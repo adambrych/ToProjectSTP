@@ -80,8 +80,10 @@ public class SalesManNeighbourhood {
         double profitAmount = 0;
         double actualCycleProfit =  salesMan.getProfit();
         ExtendingNode bestResult;
+        long startTime = System.currentTimeMillis();
+        long elapsedTime=0;
         do {
-            profit = 0;
+            profit = -100000000;
             bestResult = null;
             ArrayList<ExtendingNode> results = new ArrayList<ExtendingNode>();
             results.add(addNewNode());
@@ -109,7 +111,9 @@ public class SalesManNeighbourhood {
                 salesMan.getTabu().addToList(bestResult);
 
             }
-        } while (profit > 0);
+            long stopTime = System.currentTimeMillis();
+            elapsedTime = stopTime - startTime;
+        } while (elapsedTime<1076);
         salesMan.setActualProfit(profitAmount + actualCycleProfit);
         salesMan.preparePath();
         salesMan.writeToFile(profitAmount + actualCycleProfit, salesMan.getClass().toString());
@@ -118,7 +122,7 @@ public class SalesManNeighbourhood {
     }
 
     private boolean checkProfit(ExtendingNode result, double profit) {
-        return (result.getProfit() > 0 && result.getProfit() > profit);
+        return (result.getProfit() > profit);
     }
 
     private void addNodeToCycle(ExtendingNode node) {

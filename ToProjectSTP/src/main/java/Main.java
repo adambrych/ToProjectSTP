@@ -66,7 +66,8 @@ public class Main {
         HashMap<String, Long> times = new HashMap<String, Long>();
         long sum = 0;
         for(SalesMan salesMan : salesMen) {
-            for (Node node : salesMan.getNodes()) {
+            //for (Node node : salesMan.getNodes()) {
+            Node node = salesMan.getNodes().get(0);
                     salesMan.getTabu().setTabuList(new ArrayList<ExtendingNode>());
                     salesMan.getTabu().setSize(0);
                     salesMan.findPath(node);
@@ -94,7 +95,7 @@ public class Main {
                         bestResults.put(salesManExtend.getClass().toString(), salesManExtend.getActualProfit());
                     }
 
-            }
+            //}
             salesMan.writeBestResult();
         }
         salesMen.get(0).writeExtensions(bestSalesMan, bestResults);
