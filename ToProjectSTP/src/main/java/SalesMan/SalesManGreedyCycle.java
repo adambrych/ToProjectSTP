@@ -32,6 +32,8 @@ public class SalesManGreedyCycle extends SalesMan {
         clearPrevNext();
         visitedNodes = new ArrayList<Node>();
         visitedNodes.add(startNode);
+        notVisitedNodes = new ArrayList<Node>(nodes);
+        notVisitedNodes.remove(startNode);
         path = new ArrayList<Node>();
         profit = 0;
 
@@ -40,8 +42,6 @@ public class SalesManGreedyCycle extends SalesMan {
     @Override
     public void findPath(Node startNode) {
         init(startNode);
-        notVisitedNodes = new ArrayList<Node>(nodes);
-        notVisitedNodes.remove(startNode);
 
         for(int step = 0; step<nodes.size()-1; step++){
             Node nextNode = findBestNextNode(notVisitedNodes);

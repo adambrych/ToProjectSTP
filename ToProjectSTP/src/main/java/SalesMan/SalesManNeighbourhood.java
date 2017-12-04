@@ -11,7 +11,6 @@ public class SalesManNeighbourhood {
     public SalesManNeighbourhood(SalesMan salesMan) {
         this.salesMan = salesMan;
         salesManGreedyCycle = new SalesManGreedyCycle(salesMan);
-        this.salesMan.getTabu().setTabuList(new ArrayList<Node>());
     }
 
     private ExtendingNode addNewNode() {
@@ -107,9 +106,8 @@ public class SalesManNeighbourhood {
                         swapEdgesInCycle(bestResult);
                         break;
                 }
-                if(salesMan.getTabu().size == 0)
-                    salesMan.getTabu().addToList(bestResult.getFrom());
-                salesMan.getTabu().addToList(bestResult.getTo());
+                salesMan.getTabu().addToList(bestResult);
+
             }
         } while (profit > 0);
         salesMan.setActualProfit(profitAmount + actualCycleProfit);

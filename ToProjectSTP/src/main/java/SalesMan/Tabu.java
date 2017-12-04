@@ -8,23 +8,47 @@ import java.util.List;
 @Data
 public class Tabu {
     int size;
-    private List<Node> tabuList;
+    private List<ExtendingNode> tabuList;
 
     public Tabu(int size){
         this.size = size;
-        this.tabuList = new ArrayList<Node>();
+        this.tabuList = new ArrayList<ExtendingNode>();
     }
 
-    public void addToList(Node node){
+    public void addToList(ExtendingNode node){
         if(tabuList.size() < size)
             tabuList.add(node);
-        else{
+        else if(size > 0){
             tabuList.remove(0);
             tabuList.add(node);
         }
     }
 
     public boolean isNodeInList(Node node){
-        return tabuList.contains(node);
+        for(ExtendingNode extendingNode : tabuList){
+            if(extendingNode.getOperationType() == OperationType.ADD){
+                Node from = extendingNode.getFrom();
+                Node to = extendingNode.getTo();
+                Node last = from.getNext();
+                if(from.getIndex() == node.getIndex() || to.getIndex() == node.getIndex() || last.getIndex() == node.getIndex())
+                    return true;
+            }
+            else if(extendingNode.getOperationType() == OperationType.REMOVE){
+                Node nodeToRemove = extendingNode.getTo();
+                Node prevNode = nodeToRemove.getPrev();
+                Node nextNode = nodeToRemove.getNext();
+                if(nodeToRemove.getIndex() == node.getIndex() || prevNode.getIndex() == node.getIndex() || nextNode.getIndex() == node.getIndex())
+                    return true;
+            }
+            else{
+                Node firstNode = extendingNode.getFrom();
+                Node secondNode = firstNode.getNext();
+                Node thirdNode = extendingNode.getTo();
+                Node fourthNode = thirdNode.getNext();
+                if(firstNode.getIndex() == node.getIndex() || secondNode.getIndex() == node.getIndex() || thirdNode.getIndex() == node.getIndex() || fourthNode.getIndex() == node.getIndex())
+                    return true;
+            }
+        }
+        return false;
     }
 }

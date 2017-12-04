@@ -66,28 +66,32 @@ public class Main {
         long sum = 0;
         for(SalesMan salesMan : salesMen) {
             for (Node node : salesMan.getNodes()) {
-                salesMan.findPath(node);
-                SalesManNeighbourhood salesManNeighbourhood = new SalesManNeighbourhood(salesMan);
-                long startTime = System.currentTimeMillis();
-                SalesMan salesManExtend = salesManNeighbourhood.extendCycle();
-                long stopTime = System.currentTimeMillis();
-                long elapsedTime = stopTime - startTime;
-                sum += elapsedTime;
+                for(int tabuSize = 0; tabuSize <=5; tabuSize++) {
+                    salesMan.getTabu().setTabuList(new ArrayList<ExtendingNode>());
+                    salesMan.getTabu().setSize(tabuSize);
+                    salesMan.findPath(node);
+                    SalesManNeighbourhood salesManNeighbourhood = new SalesManNeighbourhood(salesMan);
+                    long startTime = System.currentTimeMillis();
+                    SalesMan salesManExtend = salesManNeighbourhood.extendCycle();
+                    long stopTime = System.currentTimeMillis();
+                    long elapsedTime = stopTime - startTime;
+                    sum += elapsedTime;
 //                System.out.println(elapsedTime);
-                if (times.get(salesManExtend.getClass().toString()) == null) {
-                    times.put(salesManExtend.getClass().toString(), elapsedTime);
-                } else {
-                    times.put(salesManExtend.getClass().toString(), times.get(salesManExtend.getClass().toString()) + elapsedTime);
-                }
-                if (bestResults.get(salesManExtend.getClass().toString()) == null) {
-                    bestSalesMan.put(salesManExtend.getClass().toString(), salesManExtend.getVisitedNodes());
-                    bestResults.put(salesManExtend.getClass().toString(), salesManExtend.getActualProfit());
-                }
+                    if (times.get(salesManExtend.getClass().toString()) == null) {
+                        times.put(salesManExtend.getClass().toString(), elapsedTime);
+                    } else {
+                        times.put(salesManExtend.getClass().toString(), times.get(salesManExtend.getClass().toString()) + elapsedTime);
+                    }
+                    if (bestResults.get(salesManExtend.getClass().toString()) == null) {
+                        bestSalesMan.put(salesManExtend.getClass().toString(), salesManExtend.getVisitedNodes());
+                        bestResults.put(salesManExtend.getClass().toString(), salesManExtend.getActualProfit());
+                    }
                     double bestResult = bestResults.get(salesManExtend.getClass().toString());
                     if (salesManExtend.getActualProfit() > bestResult) {
                         bestSalesMan.put(salesManExtend.getClass().toString(), salesManExtend.getVisitedNodes());
                         bestResults.put(salesManExtend.getClass().toString(), salesManExtend.getActualProfit());
                     }
+                }
 
             }
             salesMan.writeBestResult();
