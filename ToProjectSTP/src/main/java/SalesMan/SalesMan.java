@@ -19,7 +19,6 @@ import java.util.List;
 public class SalesMan implements ISalesMan {
     protected String methodName = "";
     private static final int cost = 6;
-    private static final int tabuSize = 5;
     public static final String fileNameToWrite = "result.txt";
     protected List<Node> nodes;
     protected double[][] distances;
@@ -37,7 +36,7 @@ public class SalesMan implements ISalesMan {
         this.nodes = nodes;
         this.distances = new double[nodes.size()][nodes.size()];
         findDistancesBetweenNodes();
-        tabu = new Tabu(tabuSize);
+        tabu = new Tabu();
     }
 
     private void findDistancesBetweenNodes(){
@@ -91,6 +90,8 @@ public class SalesMan implements ISalesMan {
     protected void writeToFile(double profit, String methodName){
         try {
             Path file = Paths.get(fileNameToWrite);
+            if(methodName.startsWith("class"))
+                methodName = methodName.substring(6);
             String line = prepareLineToWrite(path, profit, methodName);
             average += profit;
             List<String> lines = Arrays.asList(line);

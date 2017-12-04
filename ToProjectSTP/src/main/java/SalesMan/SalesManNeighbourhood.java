@@ -14,7 +14,7 @@ public class SalesManNeighbourhood {
     }
 
     private ExtendingNode addNewNode() {
-        return salesManGreedyCycle.findNodeToExtend(salesMan.getNotVisitedNodes());
+        return salesManGreedyCycle.findNodeToExtend(salesMan.getNotVisitedNodes(), salesMan.getTabu());
     }
 
     private ExtendingNode removeNode() {

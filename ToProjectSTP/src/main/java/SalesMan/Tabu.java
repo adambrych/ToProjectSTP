@@ -10,6 +10,11 @@ public class Tabu {
     int size;
     private List<ExtendingNode> tabuList;
 
+    public Tabu(){
+        size = 0;
+        tabuList = new ArrayList<ExtendingNode>();
+    }
+
     public Tabu(int size){
         this.size = size;
         this.tabuList = new ArrayList<ExtendingNode>();

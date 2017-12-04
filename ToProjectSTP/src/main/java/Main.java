@@ -15,7 +15,7 @@ public class Main {
 
     private static final String fileNameA = "kroA100.txt";
     private static final String fileNameB = "kroB100.txt";
-    private static final int tabuSize = 0;
+    private static final int tabuSize = 5;
 
     public static void main(String [] args) {
         clearResultFile();
@@ -49,8 +49,8 @@ public class Main {
 
     private static List<SalesMan> prepareSalesMan(List<Node> nodes){
         List<SalesMan> salesMen = new ArrayList<SalesMan>();
-        SalesManNearestNeighbor nn = new SalesManNearestNeighbor(nodes);
-        salesMen.add(nn);
+        //SalesManNearestNeighbor nn = new SalesManNearestNeighbor(nodes);
+        //salesMen.add(nn);
         SalesManGreedyCycle gc = new SalesManGreedyCycle(nodes);
         salesMen.add(gc);
         SalesManGreedyCycleWithRegret gcr = new SalesManGreedyCycleWithRegret(nodes);
@@ -68,10 +68,12 @@ public class Main {
         for(SalesMan salesMan : salesMen) {
             for (Node node : salesMan.getNodes()) {
                     salesMan.getTabu().setTabuList(new ArrayList<ExtendingNode>());
-                    salesMan.getTabu().setSize(tabuSize);
+                    salesMan.getTabu().setSize(0);
                     salesMan.findPath(node);
                     SalesManNeighbourhood salesManNeighbourhood = new SalesManNeighbourhood(salesMan);
                     long startTime = System.currentTimeMillis();
+                    salesMan.getTabu().setTabuList(new ArrayList<ExtendingNode>());
+                    salesMan.getTabu().setSize(tabuSize);
                     SalesMan salesManExtend = salesManNeighbourhood.extendCycle();
                     long stopTime = System.currentTimeMillis();
                     long elapsedTime = stopTime - startTime;

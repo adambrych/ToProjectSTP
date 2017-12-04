@@ -98,7 +98,8 @@ public class SalesManGreedyCycle extends SalesMan {
         return bestNode;
     }
 
-    public ExtendingNode findNodeToExtend(List<Node> notVisitedNodes) {
+    public ExtendingNode findNodeToExtend(List<Node> notVisitedNodes, Tabu tabu) {
+        this.tabu = tabu;
         Node bestNode = null;
         Node from = null;
         double bestProfit = 0;
