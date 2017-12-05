@@ -12,6 +12,7 @@ import jdk.nashorn.internal.runtime.regexp.joni.constants.OPCode;
 import java.util.ArrayList;
 import java.util.List;
 
+@SuppressWarnings("Duplicates")
 public class SalesManGreedyCycle extends SalesMan {
 
     protected String methodName = "GreedyCycle";
@@ -65,8 +66,6 @@ public class SalesManGreedyCycle extends SalesMan {
         double bestProfit = 0;
         Node bestNode = null;
         for (Node node : notVisitedNodes) {
-            if(tabu.isNodeInList(node))
-                continue;
             double profit = getProfit(actualNode, node);
             if (profit >= bestProfit) {
                 bestProfit = profit;
@@ -98,8 +97,7 @@ public class SalesManGreedyCycle extends SalesMan {
         return bestNode;
     }
 
-    public ExtendingNode findNodeToExtend(List<Node> notVisitedNodes, Tabu tabu) {
-        this.tabu = tabu;
+    public ExtendingNode findNodeToExtend(List<Node> notVisitedNodes) {
         Node bestNode = null;
         Node from = null;
         double bestProfit = 0;

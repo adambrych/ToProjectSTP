@@ -67,13 +67,9 @@ public class Main {
         long sum = 0;
         for(SalesMan salesMan : salesMen) {
             for (Node node : salesMan.getNodes()) {
-                    salesMan.getTabu().setTabuList(new ArrayList<ExtendingNode>());
-                    salesMan.getTabu().setSize(0);
                     salesMan.findPath(node);
                     SalesManNeighbourhood salesManNeighbourhood = new SalesManNeighbourhood(salesMan);
                     long startTime = System.currentTimeMillis();
-                    salesMan.getTabu().setTabuList(new ArrayList<ExtendingNode>());
-                    salesMan.getTabu().setSize(tabuSize);
                     SalesMan salesManExtend = salesManNeighbourhood.extendCycle();
                     long stopTime = System.currentTimeMillis();
                     long elapsedTime = stopTime - startTime;

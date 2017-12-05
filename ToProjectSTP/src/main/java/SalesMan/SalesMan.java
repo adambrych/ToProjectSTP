@@ -30,13 +30,11 @@ public class SalesMan implements ISalesMan {
     private double average = 0;
     List<Node> bestPath = new ArrayList<Node>();
     private double actualProfit = 0;
-    protected Tabu tabu;
 
     public SalesMan(List<Node> nodes){
         this.nodes = nodes;
         this.distances = new double[nodes.size()][nodes.size()];
         findDistancesBetweenNodes();
-        tabu = new Tabu();
     }
 
     private void findDistancesBetweenNodes(){
