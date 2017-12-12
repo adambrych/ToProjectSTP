@@ -116,6 +116,7 @@ public class SalesMan implements ISalesMan {
     public void preparePath(){
         Node node = visitedNodes.get(0);
         path = new ArrayList<Node>();
+        profit = 0;
         if(visitedNodes.size() > 1) {
             do {
                 path.add(node);
