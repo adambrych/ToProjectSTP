@@ -6,10 +6,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 public class Main {
 
@@ -90,7 +87,8 @@ public class Main {
         ArrayList<SalesMan> results = new ArrayList<>();
         for (int i = 0; i < loopSize; ++i) {
             SalesManRandom salesMan = new SalesManRandom(readNodes());
-            salesMan.findPath(salesMan.getNodes().get(0));
+            Random random = new Random();
+            salesMan.findPath(salesMan.getNodes().get(random.nextInt(100)));
             SalesManNeighbourhood salesManNeighbourhood = new SalesManNeighbourhood(salesMan);
             salesManNeighbourhood.extendCycle();
             results.add(salesMan);
@@ -111,11 +109,11 @@ public class Main {
                 commonEdges[i][j] = tempCommonEdges;
                 avgNodes += tempCommonNodes;
                 avgEdges += tempCommonEdges;
-                //System.out.println(results.get(i).getProfit() + "," + tempCommonNodes + "," + tempCommonEdges);
+                System.out.println(results.get(i).getProfit() + "," + tempCommonNodes + "," + tempCommonEdges);
             }
             avgNodes /= loopSize-1;
             avgEdges /= loopSize-1;
-            System.out.println(avgNodes + " " + avgEdges);
+//            System.out.println(avgNodes + " " + avgEdges);
             avgNodes = 0;
             avgEdges = 0;
 
